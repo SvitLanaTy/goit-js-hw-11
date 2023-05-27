@@ -41,6 +41,7 @@ async function getImagesMarkup() {
   try {
     const { hits, totalHits } = await imgsService.getImages();
     const perPage = imgsService.per_page;
+    const page = imgsService.page;
 
     if (!hits) {
       return '';
@@ -54,9 +55,9 @@ async function getImagesMarkup() {
     if (totalHits && imgsService.page === 2)
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
 
-    if (hits.length < perPage && totalHits >= perPage) {
+    if ((page - 1) * perPage >= totalHits) {
       refs.loadMoreBtn.classList.add('is-hidden');
-      throw Notiflix.Notify.info(
+      Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
       );
     } else {
